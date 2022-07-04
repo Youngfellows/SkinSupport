@@ -1,6 +1,9 @@
 package com.ximsfei.skindemo;
 
+import android.app.UiModeManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +62,32 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         initToolbar(mDataBinding.toolBar);
         initNavigationView(mDataBinding.navigationView);
         configFragments();
+        getUiMode(this);
+    }
+
+    /**
+     * 获取系统设置的UI模式
+     */
+    private void getUiMode(Context context) {
+        //判断系统是否是深色模式和判断当前app是否是深色模式不一样。
+        //系统是深色模式，但此app自己代码单独设置了不是深色模式，
+        //用下列代码设置成非深色模式
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+        int uiMode = context.getResources().getConfiguration().uiMode;
+        Log.d(TAG, "getUiMode:: uiMode = " + Integer.toHexString(uiMode) + " H");
+        Log.d(TAG, "getUiMode:: getNightMode() = " + Integer.toHexString(uiModeManager.getNightMode()) + " H");
+        if ((uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+            Log.d(TAG, "getUiMode:: night");
+        } else {
+            Log.d(TAG, "getUiMode:: not night");
+        }
+        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES) {
+            Log.d(TAG, "getUiMode:: night");
+        } else {
+            Log.d(TAG, "getUiMode:: not night");
+        }
     }
 
     @Override
